@@ -1,0 +1,17 @@
+# Configuration for Cog
+build:
+  gpu: true
+  python_version: "3.10"
+  python_packages:
+    - "torch==2.0.0"
+    - "torchvision"
+    - "accelerate"
+    - "xformers"
+    - "git+https://github.com/SkunkworksAI/BakLLaVA.git"
+
+  run:
+    - pip uninstall transformers -y
+    - pip install transformers==4.34.0
+
+# predict.py defines how predictions are run on your model
+predict: "predict.py:Predictor"

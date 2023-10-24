@@ -1,0 +1,35 @@
+#!/usr/bin/env python
+
+# Run this before you deploy it on replicate
+import os
+import sys
+import torch
+from transformers import AutoConfig, AutoTokenizer
+sys.path.extend(['/BakLLaVA'])
+from llava.model.language_model.llava_mistral import LlavaMistralForCausalLM
+
+# append project directory to path so predict.py can be imported
+sys.path.append('.')
+from predict import MODEL_NAME, MODEL_CACHE, TOKEN_CACHE
+
+# Make cache folders
+if not os.path.exists(MODEL_CACHE):
+    os.makedirs(MODEL_CACHE)
+
+cfg_pretrained = AutoConfig.from_pretrained(
+    MODEL_NAME,
+    trust_remote_code=True,
+)
+
+tokenizer = AutoTokenizer.from_pretrained(
+    MODEL_NAME,
+    use_fast=False,
+    cache_dir=TOKEN_CACHE,
+)
+
+model = LlavaMistralForCausalLM.from_pretrained(
+    MODEL_NAME,
+    config=cfg_pretrained,
+    cache_dir=MODEL_CACHE,
+)
+model.save_pretrained(MODEL_CACHE)
